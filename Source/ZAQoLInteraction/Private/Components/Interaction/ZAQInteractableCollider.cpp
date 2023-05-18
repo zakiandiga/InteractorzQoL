@@ -6,7 +6,7 @@
 
 UZAQInteractableCollider::UZAQInteractableCollider()
 {	
-	InitSphereRadius(400.f);
+	InitSphereRadius(200.f);
 	CanCharacterStepUpOn = ECanBeCharacterBase::ECB_No;
 
 	SetCollisionProfileName("Interactable");
@@ -19,6 +19,7 @@ UZAQInteractableCollider::UZAQInteractableCollider()
 
 	SetGenerateOverlapEvents(true);
 	IgnoreActorWhenMoving(GetOwner(), true);
+
 }
 
 void UZAQInteractableCollider::BeginPlay()
@@ -46,12 +47,12 @@ void UZAQInteractableCollider::EndOverlap(UPrimitiveComponent* OverlappedCompone
 {
 	CurrentInteractableActorsInRange.Remove(OtherActor);
 
-	if (HasOverlappingActors()) return;
+	if (InteractablesDetected()) return;
 
 	OnInteractableExit.Broadcast();
 }
 
-bool UZAQInteractableCollider::HasOverlappingActors()
+bool UZAQInteractableCollider::InteractablesDetected()
 {	
 	return CurrentInteractableActorsInRange.Num() <= 0 ? false : true;
 }

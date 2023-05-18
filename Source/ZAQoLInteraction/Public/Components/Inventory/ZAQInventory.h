@@ -16,13 +16,14 @@ enum class EZAQItemProcessType : uint8
 };
 
 USTRUCT(BlueprintType)
-struct FItemSlot
+struct FZAQItemSlot
 {
 	GENERATED_USTRUCT_BODY()
 
 	FString Item;
 	int32 Quantity;
-	float TotalWeight() { return Quantity; }
+	
+
 
 };
 
@@ -36,7 +37,7 @@ public:
 
 private:
 	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"), Category = "Inventory Properties")
-	TArray<FItemSlot> ActiveInventory = TArray<FItemSlot>();
+	TArray<FZAQItemSlot> ActiveInventory = TArray<FZAQItemSlot>();
 
 		
 };

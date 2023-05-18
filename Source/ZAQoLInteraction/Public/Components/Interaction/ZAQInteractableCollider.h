@@ -21,7 +21,7 @@ public:
 	UZAQInteractableCollider();
 
 private:
-	UZAQInteractionHandler* InteractionHandlerComponent = nullptr;
+	TObjectPtr<UZAQInteractionHandler> InteractionHandlerComponent = nullptr;
 
 protected:
 	virtual void BeginPlay() override;
@@ -37,7 +37,7 @@ protected:
 
 public:
 	UFUNCTION(BlueprintPure, Category = "Interactable")
-	bool HasOverlappingActors();
+	bool InteractablesDetected();
 
 	UFUNCTION(BlueprintPure, Category = "Interactable")
 	TSet<AActor*> InteractableActorsInRange() { return CurrentInteractableActorsInRange; }

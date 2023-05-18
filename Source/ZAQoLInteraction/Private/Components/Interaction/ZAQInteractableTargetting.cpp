@@ -27,7 +27,7 @@ void UZAQInteractableTargetting::TracingInteractable()
 	if (PlayerCamera == nullptr && CameraBoom == nullptr) return;
 
 	FVector StartPoint = PlayerCamera->GetComponentLocation() + (PlayerCamera->GetForwardVector() * CameraBoom->TargetArmLength);
-	FVector EndPoint = StartPoint + (PlayerCamera->GetForwardVector() * 400.f);
+	FVector EndPoint = StartPoint + (PlayerCamera->GetForwardVector() * TracingRange);
 
 	FHitResult CurrentHitResult;
 	FCollisionQueryParams LineTraceParams;
@@ -43,7 +43,7 @@ void UZAQInteractableTargetting::TracingInteractable()
 
 void UZAQInteractableTargetting::TryAssignInteractable(AActor* TracedActor)
 {
-	if (TracedActor == nullptr || !InteractionHandler->IsInteractable(TracedActor))
+	if (TracedActor == nullptr || !InteractionHandler->IsInteractableActor(TracedActor))
 	{
 		if (InteractionHandler->GetCurrentInteractableActor() == nullptr) return;
 
@@ -60,7 +60,7 @@ void UZAQInteractableTargetting::TryAssignInteractable(AActor* TracedActor)
 
 bool UZAQInteractableTargetting::IsTracing() const
 {
-	return InteractableCollider && InteractableCollider->HasOverlappingActors();
+	return InteractableCollider && InteractableCollider->InteractablesDetected();
 }
 
 

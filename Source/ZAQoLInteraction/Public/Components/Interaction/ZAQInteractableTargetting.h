@@ -23,20 +23,18 @@ public:
 	UZAQInteractableTargetting();
 
 private:
-	UCameraComponent* PlayerCamera = nullptr;
-	USpringArmComponent* CameraBoom = nullptr;
+	TObjectPtr<UCameraComponent> PlayerCamera = nullptr;
+	TObjectPtr<USpringArmComponent> CameraBoom = nullptr;
 
-	UZAQInteractionHandler* InteractionHandler;
-	UZAQInteractableCollider* InteractableCollider;
-
-	TSubclassOf<UZAQInteractable>* InteractableClass;
+	TObjectPtr<UZAQInteractionHandler> InteractionHandler;
+	TObjectPtr<UZAQInteractableCollider> InteractableCollider;
 
 	void TryAssignInteractable(AActor* ActorToTry);
 
 	bool IsTracing() const;
 
 protected:
-	UPROPERTY(EditInstanceOnly, Category = "Interactable Targetting")
+	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"), Category = "Interactable Targetting")
 	float TracingRange = 400.f;
 
 	virtual void BeginPlay() override;

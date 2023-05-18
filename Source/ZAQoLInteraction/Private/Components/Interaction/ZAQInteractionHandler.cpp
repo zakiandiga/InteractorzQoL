@@ -27,7 +27,7 @@ void UZAQInteractionHandler::EndInteraction(AActor* InteractedActor)
 
 void UZAQInteractionHandler::AssignInteractable(AActor* ActorToAssign)
 {	
-	if (!IsInteractable(ActorToAssign)) return;
+	if (!IsInteractableActor(ActorToAssign)) return;
 
 	AssignedInteractableComponent = Cast<UZAQInteractable>(ActorToAssign->GetComponentByClass(UZAQInteractable::StaticClass()));
 	SetCurrentInteractableActor(ActorToAssign);
@@ -39,7 +39,7 @@ void UZAQInteractionHandler::ClearInteractable()
 	SetCurrentInteractableActor(nullptr);
 }
 
-bool UZAQInteractionHandler::IsInteractable(AActor* ActorToCheck)
+bool UZAQInteractionHandler::IsInteractableActor(AActor* ActorToCheck)
 {
 	UZAQInteractable* InteractableComponent;
 	InteractableComponent = Cast<UZAQInteractable>(ActorToCheck->GetComponentByClass(UZAQInteractable::StaticClass()));

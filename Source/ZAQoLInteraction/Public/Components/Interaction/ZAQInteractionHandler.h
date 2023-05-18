@@ -18,10 +18,10 @@ public:
 
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"), Category = "Interaction Handler")
-	AActor* CurrentInteractableActor = nullptr;
+	TObjectPtr<AActor> CurrentInteractableActor = nullptr;
 
 	UPROPERTY()
-	UZAQInteractable* AssignedInteractableComponent = nullptr;
+	TObjectPtr<UZAQInteractable> AssignedInteractableComponent = nullptr;
 
 
 public:
@@ -42,7 +42,7 @@ public:
 	void EndInteraction(AActor* InteractedActor);
 	
 	UFUNCTION(BlueprintPure, Category = "Interaction Handler")
-	bool IsInteractable(AActor* ActorToCheck);
+	bool IsInteractableActor(AActor* ActorToCheck);
 
 	UFUNCTION(BlueprintPure, Category = "Interaction Handler")
 	AActor* GetCurrentInteractableActor() { return CurrentInteractableActor; }
