@@ -13,6 +13,7 @@ class UZAQInteractableCollider;
 class UCameraComponent;
 class USpringArmComponent;
 
+class UZAQItem;
 
 UCLASS()
 class ZAQOLINTERACTION_API AZAQCharacter : public ACharacter
@@ -60,4 +61,14 @@ public:
 
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	/// <summary>
+	/// UseItem() functionality unit test. Should be removed after the inventory functionality developed
+	/// </summary>
+	UPROPERTY(EditAnywhere, Category = "Test Unit")
+	TSubclassOf<UZAQItem> GrabbedItemClass;
+
+	TObjectPtr<UZAQItem> GrabbedItem;
+
+	void UseItemTest();
+	//END OF TEST LINES
 };

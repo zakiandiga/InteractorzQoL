@@ -6,6 +6,7 @@
 #include "Components/Interaction/ZAQInteractable.h"
 #include "ZAQPickupItem.generated.h"
 
+class UZAQItem;
 /**
  Pickup item example
  */
@@ -17,7 +18,9 @@ class ZAQOLINTERACTION_API UZAQPickupItem : public UZAQInteractable
 public:
 	UZAQPickupItem();
 
-
+protected:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"), Category = "Item Data")
+	UZAQItem* Item;
 
 public:
 	virtual void Interact_Implementation(AActor* InteractingActor) override;

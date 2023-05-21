@@ -12,6 +12,9 @@
 #include "Components/Interaction/ZAQInteractionHandler.h"
 #include "Components/Interaction/ZAQInteractableCollider.h"
 
+#include "Item/ZAQItem.h"
+#include "Item/DA_ZAQItem.h"
+
 AZAQCharacter::AZAQCharacter()
 {
 	PrimaryActorTick.bCanEverTick = true;
@@ -89,8 +92,30 @@ void AZAQCharacter::LookUp(float Value)
 	AddControllerPitchInput(Value);
 }
 
+//UseItem() functionality test
+void AZAQCharacter::UseItemTest()
+{
+	if (GrabbedItemClass == nullptr)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("GrabbedItem == nullptr"));
+		return;
+	}
+
+	UZAQItem* ItemClass = NewObject<UZAQItem>(GetOwner(), GrabbedItemClass);
+
+	if (ItemClass == nullptr)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("ItemClass == nullptr"));
+		return;
+	}
+
+	ItemClass->UseItem(this);
+}
+
 void AZAQCharacter::Interact()
 {
+	UseItemTest();	//UseItem() functionality test
+
 	if (Controller == nullptr) return;
 	if (PlayerStates == EZAQPlayerControlStates::EPCS_Interacting) return;
 

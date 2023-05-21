@@ -38,6 +38,8 @@ public class ZAQoLInteraction : ModuleRules
 				"Engine",
 				"Slate",
 				"SlateCore",
+				"UMG",
+				"CoreUObject"
 				// ... add private dependencies that you statically link with here ...	
 			}
 			);

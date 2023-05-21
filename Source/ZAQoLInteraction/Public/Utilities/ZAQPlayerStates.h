@@ -2,6 +2,9 @@
 
 #pragma once
 
+#include "CoreMinimal.h"
+#include "ZAQPlayerStates.generated.h"
+
 UENUM(BlueprintType)
 enum class EZAQPlayerControlStates : uint8
 {

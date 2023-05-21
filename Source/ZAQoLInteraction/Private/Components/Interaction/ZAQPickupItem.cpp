@@ -2,6 +2,7 @@
 
 
 #include "Components/Interaction/ZAQPickupItem.h"
+#include "Item/ZAQItem.h"
 
 UZAQPickupItem::UZAQPickupItem() : UZAQInteractable()
 {
