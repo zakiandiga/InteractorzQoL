@@ -7,10 +7,10 @@ Currently ready feature:
 + Interactable detection collider
 + Interaction targetting system
 + Interactable base
++ Item functionality
++ Item authoring system
 
 Upcoming:
-+ Interactable pickup item
-+ Item authoring system
 + Inventory
 + Interactable NPC
 
