@@ -36,6 +36,8 @@ void UZAQItem::AssignPropertiesFromItemData()
 	ItemDescription = Item->ItemData.Description;
 	ItemType = Item->ItemData.ItemType;
 	ItemPickupSprite = Item->ItemData.PickUpSprite;	
+	Stackable = Item->ItemData.bIsStackable;
+	StackLimit = Item->ItemData.StackLimit;
 }
 
 void UZAQItem::ClearProperties()
@@ -44,6 +46,8 @@ void UZAQItem::ClearProperties()
 	ItemIcon = nullptr;
 	ItemDescription = FString();	
 	ItemPickupSprite = nullptr;
+	Stackable = true;
+	StackLimit = 1;
 }
 
 void UZAQItem::UseItem_Implementation(AActor* ItemUser)

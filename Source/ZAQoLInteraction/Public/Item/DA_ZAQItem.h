@@ -6,6 +6,9 @@
 #include "Engine/DataAsset.h"
 #include "DA_ZAQItem.generated.h"
 
+class UTexture2D;
+class UStaticMesh;
+
 UENUM(BlueprintType)
 enum class EZAItemType : uint8
 {
@@ -20,23 +23,26 @@ struct FZAItemData
 {
 	GENERATED_USTRUCT_BODY()
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Item Data")
+	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "Item Data")
 	FName Name;
 
-	UPROPERTY(EditAnyWhere, BlueprintReadOnly, Category = "Item Data")
-	class UTexture2D* Icon = nullptr;
-
-	UPROPERTY(EditAnyWhere, BlueprintReadOnly, Category = "Item Data")
-	bool bIsStackable = true;
-
-	UPROPERTY(EditAnyWhere, BlueprintReadOnly, Category = "Item Data")
+	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "Item Data")
 	FString Description;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Item Data")
+	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "Item Data")
 	EZAItemType ItemType = EZAItemType::EIT_Materials;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Item Data")
-	class UStaticMesh* PickUpSprite = nullptr;
+	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "Item Data")
+	UTexture2D* Icon = nullptr;
+
+	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "Item Data")
+	UStaticMesh* PickUpSprite = nullptr;
+
+	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "Item Data")
+	bool bIsStackable = true;
+
+	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "Item Data")
+	int32 StackLimit = 99;
 };
 
 /**

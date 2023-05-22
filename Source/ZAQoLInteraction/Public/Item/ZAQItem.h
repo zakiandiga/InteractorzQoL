@@ -24,16 +24,26 @@ private:
 	FName ItemName;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"), Category = "Item Info")
-	TObjectPtr<UTexture2D> ItemIcon = nullptr;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"), Category = "Item Info")
 	FString ItemDescription;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"), Category = "Item Info")
 	EZAItemType ItemType;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"), Category = "Item Info")
-	TObjectPtr<UStaticMesh> ItemPickupSprite = nullptr;
+	UTexture2D* ItemIcon = nullptr;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"), Category = "Item Info")
+	UStaticMesh* ItemPickupSprite = nullptr;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"), Category = "Item Info")
+	bool Stackable = true;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"), Category = "Item Info")
+	int32 StackLimit = 1;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"), Category = "Item Info")
+	int32 StackedQuantity = 1;
+
 
 #if WITH_EDITOR
 	void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
@@ -47,4 +57,14 @@ public:
 	void UseItem(AActor* ItemUser);
 
 	virtual void UseItem_Implementation(AActor* ItemUser);
+
+	FName GetName() const { return ItemName; }
+	FString GetDescription() const { return ItemDescription; }
+	EZAItemType GetItemType() const { return ItemType; }
+	UTexture2D* GetIcon() const { return ItemIcon; }
+	UStaticMesh* GetMesh() const { return ItemPickupSprite; }
+	bool IsStackable() const { return Stackable; }
+
+	int32 GetStackLimit() const { return StackLimit; }
+	int32 GetCurrentStackedQuantity() const { return StackedQuantity; }
 };
