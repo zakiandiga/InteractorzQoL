@@ -37,13 +37,14 @@ protected:
 
 public:
 	UFUNCTION(BlueprintPure, Category = "Interactable")
-	bool InteractablesDetected();
-
-	UFUNCTION(BlueprintPure, Category = "Interactable")
 	TSet<AActor*> InteractableActorsInRange() { return CurrentInteractableActorsInRange; }
+	
+	UFUNCTION(BlueprintPure, Category = "Interactable")
+	bool InteractablesDetected() const { return CurrentInteractableActorsInRange.Num() > 0; }
 	
 	UFUNCTION(BlueprintCallable, Category = "Interactable")
 	void UpdateOverlappingActorsTSet();
+
 
 	UPROPERTY(BlueprintAssignable, Category = "Interactable")
 	FOnInteractableUpdated OnInteractableEnter;

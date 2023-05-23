@@ -26,7 +26,13 @@ void UZAQInteractableCollider::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if (GetOwner() == nullptr) return;
+#if WITH_EDITOR
+	if (GetOwner() == nullptr)
+	{
+		UE_LOG(LogTemp, Error, TEXT("ERROR: Interactable Detector isn't assigned to the actor!"));
+		return;
+	}
+#endif
 
 	InteractionHandlerComponent = Cast<UZAQInteractionHandler>(GetOwner()->GetComponentByClass(UZAQInteractionHandler::StaticClass()));
 	
@@ -47,14 +53,10 @@ void UZAQInteractableCollider::EndOverlap(UPrimitiveComponent* OverlappedCompone
 {
 	CurrentInteractableActorsInRange.Remove(OtherActor);
 
-	if (InteractablesDetected()) return;
-
-	OnInteractableExit.Broadcast();
-}
-
-bool UZAQInteractableCollider::InteractablesDetected()
-{	
-	return CurrentInteractableActorsInRange.Num() <= 0 ? false : true;
+	if (!InteractablesDetected())
+	{
+		OnInteractableExit.Broadcast();
+	}
 }
 
 void UZAQInteractableCollider::UpdateOverlappingActorsTSet()
@@ -63,8 +65,9 @@ void UZAQInteractableCollider::UpdateOverlappingActorsTSet()
 
 	for (AActor* OverlappingActor : CurrentInteractableActorsInRange)
 	{
-		if (IsOverlappingActor(OverlappingActor)) return;
-		
-		CurrentInteractableActorsInRange.Remove(OverlappingActor);		
+		if (!IsOverlappingActor(OverlappingActor))
+		{
+			CurrentInteractableActorsInRange.Remove(OverlappingActor);		
+		}		
 	}
 }

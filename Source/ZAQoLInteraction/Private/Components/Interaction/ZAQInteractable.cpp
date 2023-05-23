@@ -27,9 +27,6 @@ void UZAQInteractable::Interact_Implementation(AActor* InteractingActor)
 	//this non-autofinish interactable is helpful to handle interaction that requires que from external event in order to finish, 
 	//for example finishing the interaction after the set of dialogue of an NPC is displayed.
 	FinishedInteraction();
-
-	if (!bShouldAutoFinish) return;
-	FinishedInteraction();
 }
 
 void UZAQInteractable::FinishedInteraction()

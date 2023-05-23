@@ -24,7 +24,13 @@ void UZAQInteractableTargetting::BeginPlay()
 
 void UZAQInteractableTargetting::TracingInteractable()
 {
-	if (PlayerCamera == nullptr && CameraBoom == nullptr) return;
+#if WITH_EDITOR
+	if (PlayerCamera == nullptr && CameraBoom == nullptr)
+	{
+		UE_LOG(LogTemp, Error, TEXT("%s: PlayerCamera OR CameraBoom are nullptr, cannot TracingInteractable()"));
+		return;
+	}
+#endif
 
 	FVector StartPoint = PlayerCamera->GetComponentLocation() + (PlayerCamera->GetForwardVector() * CameraBoom->TargetArmLength);
 	FVector EndPoint = StartPoint + (PlayerCamera->GetForwardVector() * TracingRange);
@@ -45,22 +51,32 @@ void UZAQInteractableTargetting::TryAssignInteractable(AActor* TracedActor)
 {
 	if (TracedActor == nullptr || !InteractionHandler->IsInteractableActor(TracedActor))
 	{
-		if (InteractionHandler->GetCurrentInteractableActor() == nullptr) return;
-
-		InteractionHandler->ClearInteractable();
-		OnInteractableGone.Broadcast();
-		return;
+		if (InteractionHandler->GetCurrentInteractableActor() != nullptr)
+		{
+			InteractionHandler->ClearInteractable();
+			OnInteractableGone.Broadcast();
+			return;
+		}
 	}
 
-	if (TracedActor == InteractionHandler->GetCurrentInteractableActor()) return;
-
-	InteractionHandler->AssignInteractable(TracedActor);
-	OnInteractableFound.Broadcast(TracedActor);
+	if (TracedActor != InteractionHandler->GetCurrentInteractableActor())
+	{
+		InteractionHandler->AssignInteractable(TracedActor);
+		OnInteractableFound.Broadcast(TracedActor);
+	}
 }
 
 bool UZAQInteractableTargetting::IsTracing() const
 {
-	return InteractableCollider && InteractableCollider->InteractablesDetected();
+#if WITH_EDITOR
+	if (InteractableCollider == nullptr)
+	{
+		UE_LOG(LogTemp, Error, TEXT("%s: InteractableCollider not found!"), *GetOwner()->GetName());
+		return false;
+	}
+#endif
+
+	return InteractableCollider->InteractablesDetected();
 }
 
 
@@ -68,8 +84,9 @@ void UZAQInteractableTargetting::TickComponent(float DeltaTime, ELevelTick TickT
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	if (!IsTracing()) return;
-	
-	TracingInteractable();
+	if (IsTracing())
+	{
+		TracingInteractable();
+	}	
 }
 

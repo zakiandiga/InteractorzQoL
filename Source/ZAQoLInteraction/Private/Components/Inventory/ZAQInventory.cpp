@@ -2,14 +2,12 @@
 
 
 #include "Components/Inventory/ZAQInventory.h"
+#include "Math/UnrealMathUtility.h"
 #include "Item/ZAQItem.h"
 
-// Sets default values for this component's properties
 UZAQInventory::UZAQInventory()
 {
 	PrimaryComponentTick.bCanEverTick = false;
-
-
 }
 
 void UZAQInventory::AddToInventory(UZAQItem* ItemToAdd, int32 QuantityToAdd)
@@ -17,7 +15,7 @@ void UZAQInventory::AddToInventory(UZAQItem* ItemToAdd, int32 QuantityToAdd)
 	FZAQItemSlot* outSlot = nullptr;
 	if (ItemAvailable(ItemToAdd, *outSlot))
 	{
-		ModifyExistingEntryQuantity(outSlot, QuantityToAdd);	
+		AddExistingEntryQuantity(outSlot, QuantityToAdd);	
 		return;
 	}
 
@@ -29,47 +27,56 @@ void UZAQInventory::AddNewEntry(UZAQItem* ItemToAdd, int32 QuantityToAdd)
 	int32 EmptySlot = 0;
 	if (!EmptySlotAvailable(EmptySlot))
 	{
-		OnRetrieveItemFailed.Broadcast(EZAQRetrieveFailedType::ERF_FULLINVENTORY, ItemToAdd);
+		OnRetrieveItemFailed.Broadcast(EZAQRetrieveFailedType::ERF_FULLINVENTORY, ItemToAdd, QuantityToAdd);
 		return;
 	}
 	
 	FZAQItemSlot* NewEntry = new FZAQItemSlot();
-	NewEntry->SetItem(ItemToAdd);
-	NewEntry->ChangeQuantity(QuantityToAdd);
+	NewEntry->SetItem(ItemToAdd);	
+	int32 ClampedQuantity = FMath::Clamp(QuantityToAdd, 0, GetSlotStackLimit(NewEntry));	
+	NewEntry->ChangeQuantity(ClampedQuantity);
 	InventorySlots.Add(*NewEntry);
 
 	OnAddingItemSuccess.Broadcast(ItemToAdd, QuantityToAdd);
 }
 
-void UZAQInventory::ModifyExistingEntryQuantity(FZAQItemSlot* SlotToModify, int32 QuantityToModify)
+void UZAQInventory::AddExistingEntryQuantity(FZAQItemSlot* SlotToModify, int32 QuantityToModify)
 {
 	UZAQItem* ItemHandled = SlotToModify->GetItem();
-	if (SlotToModify->GetItemQuantity() + QuantityToModify >= ItemHandled->GetStackLimit())
+	int32 AvailableStack = GetRemainingSlotStackAvailable(SlotToModify);
+	int32 LeftoverQuantity = QuantityToModify - AvailableStack;
+
+	if(LeftoverQuantity > 0)
 	{
-		OnRetrieveItemFailed.Broadcast(EZAQRetrieveFailedType::ERF_FULLSLOT, ItemHandled);
-		return;
+		OnRetrieveItemFailed.Broadcast(EZAQRetrieveFailedType::ERF_FULLSLOT, ItemHandled, LeftoverQuantity);
 	}
 		
-	SlotToModify->ChangeQuantity(QuantityToModify);	
-
-	OnAddingItemSuccess.Broadcast(ItemHandled, QuantityToModify);
+	if (AvailableStack > 0)
+	{
+		SlotToModify->ChangeQuantity(AvailableStack);	
+		OnAddingItemSuccess.Broadcast(ItemHandled, QuantityToModify);
+	}
 }
 
-void UZAQInventory::RemoveFromInventory(UZAQItem* ItemToRemove, int32 QuantityToRemove)
+bool UZAQInventory::TryRemoveFromInventory(UZAQItem* ItemToRemove, int32 QuantityToRemove)
 {
 	FZAQItemSlot* ItemContainingSlot = nullptr;
 	if (!ItemAvailable(ItemToRemove, *ItemContainingSlot))
 	{
+#if WITH_EDITOR
 		UE_LOG(LogTemp, Error, TEXT("Error: %s NOT found in the inventory!"), *ItemToRemove->GetName().ToString());
+#endif
 		OnRemoveItemFailed.Broadcast(EZAQRemoveFailedType::ERF_NOTFOUND, ItemToRemove);
-		return;
+		return false;
 	}
 	
 	if (ItemContainingSlot->GetItemQuantity() < QuantityToRemove)
 	{
+#if WITH_EDITOR
 		UE_LOG(LogTemp, Error, TEXT("Error: Inventory doesn't have enough %s!"), *ItemToRemove->GetName().ToString());
+#endif
 		OnRemoveItemFailed.Broadcast(EZAQRemoveFailedType::ERF_NOTENOUGH, ItemToRemove);
-		return;
+		return false;
 	}
 
 	ItemContainingSlot->ChangeQuantity(-QuantityToRemove);
@@ -80,16 +87,11 @@ void UZAQInventory::RemoveFromInventory(UZAQItem* ItemToRemove, int32 QuantityTo
 	}
 
 	OnRemovingItemSuccess.Broadcast(ItemToRemove, QuantityToRemove);
+	return true;
 }
 
 bool UZAQInventory::ItemAvailable(UZAQItem* ItemToCheck, FZAQItemSlot& outItemSlot) const
 {
-	if (ItemToCheck == nullptr)
-	{
-		UE_LOG(LogTemp, Error, TEXT("ItemAvailable() return false because there's no ItemToCheck"));
-		return false;
-	}
-	
 	for (int i = 0; i < InventorySlots.Num(); i++)
 	{
 		if (InventorySlots[i].GetItem() == ItemToCheck)
@@ -103,37 +105,40 @@ bool UZAQInventory::ItemAvailable(UZAQItem* ItemToCheck, FZAQItemSlot& outItemSl
 }
 
 int32 UZAQInventory::GetSlotStackLimit(FZAQItemSlot* SlotToCheck) const
-{	
+{
 	return bOverrideStackLimit ? OverridedStackLimitValue : SlotToCheck->GetItem()->GetStackLimit();
 }
 
 int32 UZAQInventory::GetRemainingSlotStackAvailable(FZAQItemSlot* SlotToCheck) const
-{	
+{
 	return GetSlotStackLimit(SlotToCheck) - SlotToCheck->GetItemQuantity();
 }
 
 bool UZAQInventory::EmptySlotAvailable(int32 outAmount) const
 {
 	outAmount = GetMaximumSlot() - GetOccupiedSlot();
-
 	return outAmount <= GetMaximumSlot();
 }
 
 void UZAQInventory::RetrieveItem(UZAQItem* ItemToRetrieve, int32 QuantityToRetrieve)
 {
-	if (ItemToRetrieve == nullptr) return;
-
 	AddToInventory(ItemToRetrieve, QuantityToRetrieve);
 }
 
 void UZAQInventory::DropItem(UZAQItem* ItemToDrop, int32 QuantityToDrop)
 {
-	//Spawn to world functionalities
+	if (TryRemoveFromInventory(ItemToDrop, QuantityToDrop))
+	{
+		ItemToDrop->SpawnItem(GetOwner());
+	}
 }
 
-void UZAQInventory::ConsumeItem(UZAQItem* ItemToConsume)
+void UZAQInventory::ConsumeItem(UZAQItem* ItemToConsume, int32 QuantityToConsume)
 {
-	//Consume functionalities
+	if (TryRemoveFromInventory(ItemToConsume, QuantityToConsume))
+	{
+		ItemToConsume->UseItem(GetOwner());
+	}
 }
 
 void UZAQInventory::ForceRemoveItem(UZAQItem* ItemToRemove, int32 QuantityToRemove)

@@ -48,7 +48,7 @@ struct FZAQItemSlot
 	void ChangeQuantity(int32 Value) { Quantity += Value; }
 };
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FZAOnRetrieveItemFailed, EZAQRetrieveFailedType, RetrieveFailedType, UZAQItem*, Item);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FZAOnRetrieveItemFailed, EZAQRetrieveFailedType, RetrieveFailedType, UZAQItem*, Item, int32, Quantity);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FZAOnRemoveItemFailed, EZAQRemoveFailedType, RemoveFailedType, UZAQItem*, Item);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FZAOnTransferItemSuccess, UZAQItem*, Item, int32, Quantity);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FZAOnUsedItem, UZAQItem*, Item);
@@ -78,8 +78,8 @@ private:
 	
 	void AddToInventory(UZAQItem* ItemToAdd, int32 QuantityToAdd);	
 	void AddNewEntry(UZAQItem* ItemToAdd, int32 QuantityToAdd);	
-	void ModifyExistingEntryQuantity(FZAQItemSlot* SlotToModify, int32 QuantityToModify);
-	void RemoveFromInventory(UZAQItem* ItemToRemove, int32 QuantityToRemove);
+	void AddExistingEntryQuantity(FZAQItemSlot* SlotToModify, int32 QuantityToModify);
+	bool TryRemoveFromInventory(UZAQItem* ItemToRemove, int32 QuantityToRemove);
 
 	bool ItemAvailable(UZAQItem* ItemToCheck, FZAQItemSlot& outItemSlot) const;
 	int32 GetMaximumSlot() const { return MaximumSlotNumber; }
@@ -91,6 +91,9 @@ private:
 public:
 	UFUNCTION(BlueprintPure, Category = "Inventory Action")
 	TArray<FZAQItemSlot> GetInventory() { return InventorySlots; }
+
+	UFUNCTION(BlueprintPure, Category = "Inventory Properties")
+	AActor* GetInventoryOwner() { return GetOwner(); }
 
 	UFUNCTION(BlueprintPure, Category = "Inventory Action")
 	bool EmptySlotAvailable(int32 outAmount) const;
@@ -105,7 +108,7 @@ public:
 	void DropItem(UZAQItem* ItemToDrop, int32 QuantityToDrop);
 
 	UFUNCTION(BlueprintCallable, Category = "Inventory Action")
-	void ConsumeItem(UZAQItem* ItemToConsume);
+	void ConsumeItem(UZAQItem* ItemToConsume, int32 QuantityToConsume);
 
 	UFUNCTION(BlueprintCallable, Category = "Inventory Action")
 	void ForceRemoveItem(UZAQItem* ItemToRemove, int32 QuantityToRemove);

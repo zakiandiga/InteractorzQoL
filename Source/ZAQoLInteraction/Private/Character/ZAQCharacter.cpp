@@ -50,9 +50,13 @@ AZAQCharacter::AZAQCharacter()
 
 void AZAQCharacter::MoveForward(float Value)
 {
-	if (Controller == nullptr) return;
-	if (Value == 0) return;
-	if (PlayerStates == EZAQPlayerControlStates::EPCS_Interacting) return;
+	if (PlayerStates == EZAQPlayerControlStates::EPCS_Interacting)
+	{
+#if WITH_EDITOR
+		UE_LOG(LogTemp, Error, TEXT("%s: is currently interacting, cannot move"), *GetName());
+#endif
+		return;
+	}
 
 	const FRotator ControllerRotation = GetControlRotation();
 	const FRotator YawRotation(0, ControllerRotation.Yaw, 0);
@@ -63,9 +67,13 @@ void AZAQCharacter::MoveForward(float Value)
 
 void AZAQCharacter::MoveSide(float Value)
 {
-	if (Controller == nullptr) return;
-	if (Value == 0) return;
-	if (PlayerStates == EZAQPlayerControlStates::EPCS_Interacting) return;
+	if (PlayerStates == EZAQPlayerControlStates::EPCS_Interacting)
+	{
+#if WITH_EDITOR
+		UE_LOG(LogTemp, Error, TEXT("%s: is currently interacting, cannot move"), *GetName());
+#endif
+		return;
+	}
 
 	const FRotator ControllerRotation = GetControlRotation();
 	const FRotator YawRotation(0, ControllerRotation.Yaw, 0);
@@ -75,19 +83,27 @@ void AZAQCharacter::MoveSide(float Value)
 }
 
 void AZAQCharacter::Turn(float Value)
-{
-	if (Value == 0) return;
-	if (Controller == nullptr) return;
-	if (PlayerStates == EZAQPlayerControlStates::EPCS_Interacting) return;
+{	
+	if (PlayerStates == EZAQPlayerControlStates::EPCS_Interacting)
+	{
+#if WITH_EDITOR
+		UE_LOG(LogTemp, Error, TEXT("%s: is currently interacting, cannot move"), *GetName());
+#endif
+		return;
+	}
 
 	AddControllerYawInput(Value);
 }
 
 void AZAQCharacter::LookUp(float Value)
 {
-	if (Value == 0) return;
-	if (Controller == nullptr) return;
-	if (PlayerStates == EZAQPlayerControlStates::EPCS_Interacting) return;
+	if (PlayerStates == EZAQPlayerControlStates::EPCS_Interacting)
+	{
+#if WITH_EDITOR
+		UE_LOG(LogTemp, Error, TEXT("%s: is currently interacting, cannot move"), *GetName());
+#endif
+		return;
+	}
 
 	AddControllerPitchInput(Value);
 }
@@ -97,7 +113,9 @@ void AZAQCharacter::UseItemTest()
 {
 	if (GrabbedItemClass == nullptr)
 	{
+#if WITH_EDITOR
 		UE_LOG(LogTemp, Warning, TEXT("GrabbedItem == nullptr"));
+#endif
 		return;
 	}
 
@@ -105,7 +123,9 @@ void AZAQCharacter::UseItemTest()
 
 	if (ItemClass == nullptr)
 	{
+#if WITH_EDITOR
 		UE_LOG(LogTemp, Warning, TEXT("ItemClass == nullptr"));
+#endif
 		return;
 	}
 
@@ -114,20 +134,38 @@ void AZAQCharacter::UseItemTest()
 
 void AZAQCharacter::Interact()
 {
-	UseItemTest();	//UseItem() functionality test
+	//UseItem() testing
+	UseItemTest();	
+	//UseItem() testing ENDLINE
 
-	if (Controller == nullptr) return;
-	if (PlayerStates == EZAQPlayerControlStates::EPCS_Interacting) return;
+	if (PlayerStates == EZAQPlayerControlStates::EPCS_Interacting)
+	{
+#if WITH_EDITOR
+		UE_LOG(LogTemp, Error, TEXT("%s: is currently interacting, cannot initiate another Interact()"), *GetName());
+#endif
+		return;
+	}
 
-	if (InteractionHandlerComponent == nullptr) return;
+	if (InteractionHandlerComponent == nullptr)
+	{
+#if WITH_EDITOR
+		UE_LOG(LogTemp, Error, TEXT("%s: Interaction Handler Component isn't found, cannot Interact()"), *GetName());
+#endif
+		return;
+	}
 
 	InteractionHandlerComponent->InitiateInteraction();
 }
 
 void AZAQCharacter::Jump()
 {
-	if (Controller == nullptr) return;
-	if (PlayerStates == EZAQPlayerControlStates::EPCS_Interacting) return;
+	if (PlayerStates == EZAQPlayerControlStates::EPCS_Interacting)
+	{
+#if WITH_EDITOR	
+		UE_LOG(LogTemp, Error, TEXT("%s: is currently interacting, cannot Jump()"), *GetName()); 
+#endif
+		return;
+	}
 
 	Super::Jump();
 }

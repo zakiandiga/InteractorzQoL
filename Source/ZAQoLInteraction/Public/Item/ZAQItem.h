@@ -11,7 +11,7 @@
 #include "ZAQItem.generated.h"
 
 UCLASS(Blueprintable, ClassGroup = ("ZAQoLInteraction"), meta = (DisplayName = "Item"))
-class ZAQOLINTERACTION_API UZAQItem : public UObject
+class ZAQOLINTERACTION_API UZAQItem : public USceneComponent
 {
 	GENERATED_BODY()
 
@@ -56,15 +56,34 @@ public:
 	UFUNCTION(BlueprintNativeEvent, Category = "Item")
 	void UseItem(AActor* ItemUser);
 
-	virtual void UseItem_Implementation(AActor* ItemUser);
+	UFUNCTION(BlueprintNativeEvent, Category = "Item")
+	void SpawnItem(AActor* ItemUser);
 
+	virtual void UseItem_Implementation(AActor* ItemUser);
+	virtual void SpawnItem_Implementation(AActor* ItemSpawner);
+
+	UFUNCTION(BlueprintPure, Category = "Item")
 	FName GetName() const { return ItemName; }
+
+	UFUNCTION(BlueprintPure, Category = "Item")
 	FString GetDescription() const { return ItemDescription; }
+
+	UFUNCTION(BlueprintPure, Category = "Item")
 	EZAItemType GetItemType() const { return ItemType; }
+
+	UFUNCTION(BlueprintPure, Category = "Item")
 	UTexture2D* GetIcon() const { return ItemIcon; }
+
+	UFUNCTION(BlueprintPure, Category = "Item")
 	UStaticMesh* GetMesh() const { return ItemPickupSprite; }
+
+	UFUNCTION(BlueprintPure, Category = "Item")
 	bool IsStackable() const { return Stackable; }
 
+
+	UFUNCTION(BlueprintPure, Category = "Item")
 	int32 GetStackLimit() const { return StackLimit; }
+
+	UFUNCTION(BlueprintPure, Category = "Item")
 	int32 GetCurrentStackedQuantity() const { return StackedQuantity; }
 };

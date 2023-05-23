@@ -2,7 +2,6 @@
 
 #include "Components/Interaction/ZAQInteractionHandler.h"
 #include "Components/Interaction/ZAQInteractable.h"
-#include "GameFramework/Actor.h"
 #include "Kismet/KismetSystemLibrary.h"
 
 UZAQInteractionHandler::UZAQInteractionHandler()
@@ -12,7 +11,13 @@ UZAQInteractionHandler::UZAQInteractionHandler()
 
 void UZAQInteractionHandler::InitiateInteraction()
 {
-	if (AssignedInteractableComponent == nullptr) return;
+	if (AssignedInteractableComponent == nullptr)
+	{
+#if WITH_EDITOR
+		UE_LOG(LogTemp, Error, TEXT("%s: No Interactable assigned, will not InitiateInteraction()!"), *GetOwner()->GetName());
+#endif
+		return;
+	}
 	
 	AssignedInteractableComponent->OnInteractionFinished.AddUniqueDynamic(this, &UZAQInteractionHandler::EndInteraction);
 	AssignedInteractableComponent->Interact(GetOwner());
@@ -27,24 +32,8 @@ void UZAQInteractionHandler::EndInteraction(AActor* InteractedActor)
 
 void UZAQInteractionHandler::AssignInteractable(AActor* ActorToAssign)
 {	
-	if (!IsInteractableActor(ActorToAssign)) return;
-
-	AssignedInteractableComponent = Cast<UZAQInteractable>(ActorToAssign->GetComponentByClass(UZAQInteractable::StaticClass()));
-	SetCurrentInteractableActor(ActorToAssign);
+	if (IsInteractableActor(ActorToAssign))
+	{
+		AssignedInteractableComponent = Cast<UZAQInteractable>(ActorToAssign->GetComponentByClass(UZAQInteractable::StaticClass()));
+	}
 }
-
-void UZAQInteractionHandler::ClearInteractable()
-{
-	AssignedInteractableComponent = nullptr;
-	SetCurrentInteractableActor(nullptr);
-}
-
-bool UZAQInteractionHandler::IsInteractableActor(AActor* ActorToCheck)
-{
-	UZAQInteractable* InteractableComponent;
-	InteractableComponent = Cast<UZAQInteractable>(ActorToCheck->GetComponentByClass(UZAQInteractable::StaticClass()));
-	return InteractableComponent != nullptr;
-}
-
-
-
