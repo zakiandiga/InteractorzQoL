@@ -1,5 +1,4 @@
-// Copyright Zaki Agraraharja. All Rights Reserved.
-
+/* Copyright (c) [2023] zakiandiga (github.com/zakiandiga) - All rights reserved. */
 
 #include "Components/Interaction/ZAQInteractableCollider.h"
 #include "Components/Interaction/ZAQInteractionHandler.h"
@@ -25,14 +24,6 @@ UZAQInteractableCollider::UZAQInteractableCollider()
 void UZAQInteractableCollider::BeginPlay()
 {
 	Super::BeginPlay();
-
-#if WITH_EDITOR
-	if (GetOwner() == nullptr)
-	{
-		UE_LOG(LogTemp, Error, TEXT("ERROR: Interactable Detector isn't assigned to the actor!"));
-		return;
-	}
-#endif
 
 	InteractionHandlerComponent = Cast<UZAQInteractionHandler>(GetOwner()->GetComponentByClass(UZAQInteractionHandler::StaticClass()));
 	

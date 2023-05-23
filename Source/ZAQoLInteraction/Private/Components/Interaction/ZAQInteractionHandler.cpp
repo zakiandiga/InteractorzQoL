@@ -1,4 +1,4 @@
-// Copyright Zaki Agraraharja. All Rights Reserved.
+/* Copyright (c) [2023] zakiandiga (github.com/zakiandiga) - All rights reserved. */
 
 #include "Components/Interaction/ZAQInteractionHandler.h"
 #include "Components/Interaction/ZAQInteractable.h"
@@ -11,16 +11,11 @@ UZAQInteractionHandler::UZAQInteractionHandler()
 
 void UZAQInteractionHandler::InitiateInteraction()
 {
-	if (AssignedInteractableComponent == nullptr)
+	if (AssignedInteractableComponent != nullptr)
 	{
-#if WITH_EDITOR
-		UE_LOG(LogTemp, Error, TEXT("%s: No Interactable assigned, will not InitiateInteraction()!"), *GetOwner()->GetName());
-#endif
-		return;
-	}
-	
-	AssignedInteractableComponent->OnInteractionFinished.AddUniqueDynamic(this, &UZAQInteractionHandler::EndInteraction);
-	AssignedInteractableComponent->Interact(GetOwner());
+		AssignedInteractableComponent->OnInteractionFinished.AddUniqueDynamic(this, &UZAQInteractionHandler::EndInteraction);
+		AssignedInteractableComponent->Interact(GetOwner());
+	}	
 }
 
 void UZAQInteractionHandler::EndInteraction(AActor* InteractedActor)
@@ -30,10 +25,17 @@ void UZAQInteractionHandler::EndInteraction(AActor* InteractedActor)
 	OnInteractionEnds.Broadcast();
 }
 
+bool UZAQInteractionHandler::IsInteractableActor(AActor* ActorToCheck)
+{	
+	UZAQInteractable* InteractableComponent = Cast<UZAQInteractable>(ActorToCheck->GetComponentByClass(UZAQInteractable::StaticClass()));
+	return InteractableComponent != nullptr;
+}
+
 void UZAQInteractionHandler::AssignInteractable(AActor* ActorToAssign)
 {	
 	if (IsInteractableActor(ActorToAssign))
 	{
 		AssignedInteractableComponent = Cast<UZAQInteractable>(ActorToAssign->GetComponentByClass(UZAQInteractable::StaticClass()));
+		UE_LOG(LogTemp, Warning, TEXT("Interactable = %s"), *AssignedInteractableComponent->GetName());
 	}
 }

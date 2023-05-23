@@ -1,5 +1,4 @@
-// Copyright Zaki Agraraharja. All Rights Reserved.
-
+/* Copyright (c) [2023] zakiandiga (github.com/zakiandiga) - All rights reserved. */
 
 #include "Components/Inventory/ZAQInventory.h"
 #include "Math/UnrealMathUtility.h"

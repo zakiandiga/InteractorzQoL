@@ -1,4 +1,5 @@
-// Copyright Zaki Agraraharja. All Rights Reserved.
+/* Copyright (c) [2023] zakiandiga (github.com/zakiandiga) - All rights reserved. */
+
 #pragma once
 
 #include "CoreMinimal.h"
@@ -20,7 +21,7 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"), Category = "Interaction Handler")
 	TObjectPtr<AActor> CurrentInteractableActor = nullptr;
 
-	UPROPERTY()
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"), Category = "Interaction Handler")
 	TObjectPtr<UZAQInteractable> AssignedInteractableComponent = nullptr;
 
 
@@ -42,7 +43,7 @@ public:
 	void EndInteraction(AActor* InteractedActor);
 	
 	UFUNCTION(BlueprintPure, Category = "Interaction Handler")
-	bool IsInteractableActor(const AActor* ActorToCheck) { return ActorToCheck->IsA<UZAQInteractable>(); }
+	bool IsInteractableActor(AActor* ActorToCheck);
 
 	UFUNCTION(BlueprintPure, Category = "Interaction Handler")
 	AActor* GetCurrentInteractableActor() { return CurrentInteractableActor; }

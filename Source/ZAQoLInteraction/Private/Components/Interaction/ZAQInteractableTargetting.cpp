@@ -1,4 +1,4 @@
-// Copyright Zaki Agraraharja. All Rights Reserved.
+/* Copyright (c) [2023] zakiandiga (github.com/zakiandiga) - All rights reserved. */
 
 #include "Components/Interaction/ZAQInteractableTargetting.h"
 #include "Components/Interaction/ZAQInteractableCollider.h"
@@ -78,7 +78,6 @@ bool UZAQInteractableTargetting::IsTracing() const
 
 	return InteractableCollider->InteractablesDetected();
 }
-
 
 void UZAQInteractableTargetting::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
