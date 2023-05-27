@@ -9,10 +9,13 @@ Currently ready feature:
 + Interactable base
 + Item functionality
 + Item authoring system
++ Inventory
++ +Item Creator BETA
 
 Upcoming:
-+ Inventory
 + Interactable NPC
++ Inventory Simple UI
++ Item Creator Improvement
 
 Developed and tested to work in Unreal Engine 5.0.3.<br>
 Documentation is still under development, will provide the link soon!<br>
