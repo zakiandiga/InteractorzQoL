@@ -39,10 +39,10 @@ public:
 	void Interact(AActor* InteractingActor);
 
 	UFUNCTION(BlueprintCallable, Category = "Interactable")
-	void FinishedInteraction();
+	virtual void FinishedInteraction();
 	
 	UFUNCTION(BlueprintPure, Category = "Interactable")
-	FName GetInteractableName();
+	virtual FName GetInteractableName();
 
 	UFUNCTION(BlueprintCallable, Category = "Interactable")
 	void SetAutoFinish(const bool ShouldAutoFinish) { bShouldAutoFinish = ShouldAutoFinish; }

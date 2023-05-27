@@ -10,9 +10,10 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Components/Interaction/ZAQInteractionHandler.h"
 #include "Components/Interaction/ZAQInteractableCollider.h"
+#include "Components/Inventory/ZAQInventory.h"
 
 #include "Item/ZAQItem.h"
-#include "Item/DA_ZAQItem.h"
+#include "Item/DA_ZAQItemData.h"
 
 AZAQCharacter::AZAQCharacter()
 {
@@ -24,6 +25,7 @@ AZAQCharacter::AZAQCharacter()
 
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("Camera Boom"));
 	PlayerCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("Player Camera"));
+	PlayerInventory = CreateDefaultSubobject<UZAQInventory>(TEXT("Player Inventory"));
 	InteractionHandlerComponent = CreateDefaultSubobject<UZAQInteractionHandler>(TEXT("Interaction Handler"));
 	InteractableTargettingComponent = CreateDefaultSubobject<UZAQInteractableTargetting>(TEXT("Interaction Targetting"));
 	InteractableDetector = CreateDefaultSubobject<UZAQInteractableCollider>(TEXT("Interactable Detector"));
@@ -130,13 +132,10 @@ void AZAQCharacter::UseItemTest()
 
 	ItemClass->UseItem(this);
 }
+//UseItem() ENDLINE
 
 void AZAQCharacter::Interact()
 {
-	//UseItem() testing
-	UseItemTest();	
-	//UseItem() testing ENDLINE
-
 	if (PlayerStates == EZAQPlayerControlStates::EPCS_Interacting)
 	{
 #if WITH_EDITOR

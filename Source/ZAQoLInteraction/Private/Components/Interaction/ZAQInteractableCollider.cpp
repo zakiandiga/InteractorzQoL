@@ -8,7 +8,7 @@ UZAQInteractableCollider::UZAQInteractableCollider()
 	InitSphereRadius(200.f);
 	CanCharacterStepUpOn = ECanBeCharacterBase::ECB_No;
 
-	SetCollisionProfileName("Interactable");
+	SetCollisionProfileName("InteractableDetector");
 	SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 	SetCollisionObjectType(ECollisionChannel::ECC_GameTraceChannel1);
 	SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Overlap);

@@ -21,6 +21,9 @@
 			"LoadingPhase": "Default",
 			"PlatformAllowList": [
 				"Win64"
+			],
+			"AdditionalDependencies": [
+				"AssetTools"
 			]
 		}
 	]

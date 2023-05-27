@@ -64,17 +64,17 @@ private:
 	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"), Category = "Inventory Properties")
 	TArray<FZAQItemSlot> InventorySlots = TArray<FZAQItemSlot>();
 
-	UPROPERTY(EditInstanceOnly, meta = (AllowPrivateAccess = "true"), Category = "Inventory Properties")
+	UPROPERTY(EditDefaultsOnly, meta = (AllowPrivateAccess = "true"), Category = "Inventory Properties")
 	int32 MaximumSlotNumber = 99;
 
-	UPROPERTY(EditInstanceOnly, meta = (AllowPrivateAccess = "true"), Category = "Inventory Properties")
+	UPROPERTY(EditDefaultsOnly, meta = (AllowPrivateAccess = "true"), Category = "Inventory Properties")
 	int32 OccupiedSlot = 0;
 
-	UPROPERTY(EditInstanceOnly, meta = (AllowPrivateAccess = "true"), Category = "Inventory Properties")
-	bool bOverrideStackLimit = false;
+	UPROPERTY(EditDefaultsOnly, meta = (AllowPrivateAccess = "true"), Category = "Inventory Properties")
+	bool bIsStorage = true;
 
-	UPROPERTY(EditInstanceOnly, meta = (AllowPrivateAccess = "true"), Category = "Inventory Properties")
-	int32 OverridedStackLimitValue = 99;
+	UPROPERTY(EditDefaultsOnly, meta = (AllowPrivateAccess = "true"), Category = "Inventory Properties")
+	int32 StorageStackLimitValue = 99;
 	
 	void AddToInventory(UZAQItem* ItemToAdd, int32 QuantityToAdd);	
 	void AddNewEntry(UZAQItem* ItemToAdd, int32 QuantityToAdd);	
@@ -105,13 +105,13 @@ public:
 	void RetrieveItem(UZAQItem* ItemToRetrieve, int32 QuantityToRetrieve);
 	
 	UFUNCTION(BlueprintCallable, Category = "Inventory Action")
-	void DropItem(UZAQItem* ItemToDrop, int32 QuantityToDrop);
+	virtual void DropItem(UZAQItem* ItemToDrop, int32 QuantityToDrop);
 
 	UFUNCTION(BlueprintCallable, Category = "Inventory Action")
-	void ConsumeItem(UZAQItem* ItemToConsume, int32 QuantityToConsume);
+	virtual void ConsumeItem(UZAQItem* ItemToConsume, int32 QuantityToConsume);
 
 	UFUNCTION(BlueprintCallable, Category = "Inventory Action")
-	void ForceRemoveItem(UZAQItem* ItemToRemove, int32 QuantityToRemove);
+	virtual void ForceRemoveItem(UZAQItem* ItemToRemove, int32 QuantityToRemove);
 
 
 	UPROPERTY(BlueprintAssignable, Category = "Inventory Events")

@@ -40,7 +40,7 @@ protected:
 	virtual void BeginPlay() override;
 
 	UFUNCTION()
-	void TracingInteractable();
+	virtual void TracingInteractable();
 
 public:	
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;

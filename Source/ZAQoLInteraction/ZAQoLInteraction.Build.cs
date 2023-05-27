@@ -30,22 +30,47 @@ public class ZAQoLInteraction : ModuleRules
 			}
 			);
 			
-		
-		PrivateDependencyModuleNames.AddRange(
-			new string[]
-			{
-				"CoreUObject",
-				"Engine",
-				"Slate",
-				"SlateCore",
-				"UMG",
-				"CoreUObject"
+		if(Target.Type == TargetType.Editor)
+		{
+            PrivateDependencyModuleNames.AddRange(
+            new string[]
+            {
+                "CoreUObject",
+                "Engine",
+                "Slate",
+                "SlateCore",
+                "UMG",
+
+
+                "AssetTools",
+                "AssetRegistry",
+                "UnrealEd",
+                "KismetCompiler"
+
 				// ... add private dependencies that you statically link with here ...	
 			}
-			);
-		
-		
-		DynamicallyLoadedModuleNames.AddRange(
+            );
+        }
+		else
+        {
+            PrivateDependencyModuleNames.AddRange(
+            new string[]
+            {
+                "CoreUObject",
+                "Engine",
+                "Slate",
+                "SlateCore",
+                "UMG"
+
+
+				// ... add private dependencies that you statically link with here ...	
+			}
+            );
+        }
+
+
+
+        DynamicallyLoadedModuleNames.AddRange(
 			new string[]
 			{
 				// ... add any modules that your module loads dynamically here ...

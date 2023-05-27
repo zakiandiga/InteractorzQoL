@@ -12,7 +12,7 @@ UZAQInventory::UZAQInventory()
 void UZAQInventory::AddToInventory(UZAQItem* ItemToAdd, int32 QuantityToAdd)
 {	
 	FZAQItemSlot* outSlot = nullptr;
-	if (ItemAvailable(ItemToAdd, *outSlot))
+	if (ItemToAdd->IsStackable() || ItemAvailable(ItemToAdd, *outSlot))
 	{
 		AddExistingEntryQuantity(outSlot, QuantityToAdd);	
 		return;
@@ -63,7 +63,7 @@ bool UZAQInventory::TryRemoveFromInventory(UZAQItem* ItemToRemove, int32 Quantit
 	if (!ItemAvailable(ItemToRemove, *ItemContainingSlot))
 	{
 #if WITH_EDITOR
-		UE_LOG(LogTemp, Error, TEXT("Error: %s NOT found in the inventory!"), *ItemToRemove->GetName().ToString());
+		UE_LOG(LogTemp, Error, TEXT("Error: %s NOT found in the inventory!"), *ItemToRemove->GetItemName().ToString());
 #endif
 		OnRemoveItemFailed.Broadcast(EZAQRemoveFailedType::ERF_NOTFOUND, ItemToRemove);
 		return false;
@@ -72,7 +72,7 @@ bool UZAQInventory::TryRemoveFromInventory(UZAQItem* ItemToRemove, int32 Quantit
 	if (ItemContainingSlot->GetItemQuantity() < QuantityToRemove)
 	{
 #if WITH_EDITOR
-		UE_LOG(LogTemp, Error, TEXT("Error: Inventory doesn't have enough %s!"), *ItemToRemove->GetName().ToString());
+		UE_LOG(LogTemp, Error, TEXT("Error: Inventory doesn't have enough %s!"), *ItemToRemove->GetItemName().ToString());
 #endif
 		OnRemoveItemFailed.Broadcast(EZAQRemoveFailedType::ERF_NOTENOUGH, ItemToRemove);
 		return false;
@@ -105,7 +105,7 @@ bool UZAQInventory::ItemAvailable(UZAQItem* ItemToCheck, FZAQItemSlot& outItemSl
 
 int32 UZAQInventory::GetSlotStackLimit(FZAQItemSlot* SlotToCheck) const
 {
-	return bOverrideStackLimit ? OverridedStackLimitValue : SlotToCheck->GetItem()->GetStackLimit();
+	return bIsStorage ? StorageStackLimitValue : SlotToCheck->GetItem()->GetStackLimit();
 }
 
 int32 UZAQInventory::GetRemainingSlotStackAvailable(FZAQItemSlot* SlotToCheck) const

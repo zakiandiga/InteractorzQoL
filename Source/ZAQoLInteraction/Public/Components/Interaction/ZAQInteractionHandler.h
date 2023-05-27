@@ -37,10 +37,10 @@ public:
 	void ClearInteractable() { AssignedInteractableComponent = nullptr; }
 
 	UFUNCTION(BlueprintCallable, Category = "Interaction Handler")
-	void InitiateInteraction();
+	virtual void InitiateInteraction();
 	
 	UFUNCTION(BlueprintCallable, Category = "Interaction Handler")
-	void EndInteraction(AActor* InteractedActor);
+	virtual void EndInteraction(AActor* InteractedActor);
 	
 	UFUNCTION(BlueprintPure, Category = "Interaction Handler")
 	bool IsInteractableActor(AActor* ActorToCheck);

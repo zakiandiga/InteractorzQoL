@@ -10,6 +10,7 @@
 class UZAQInteractionHandler;
 class UZAQInteractableTargetting;
 class UZAQInteractableCollider;
+class UZAQInventory;
 class UCameraComponent;
 class USpringArmComponent;
 
@@ -31,6 +32,9 @@ private:
 	TObjectPtr<USpringArmComponent> CameraBoom;
 
 	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = "true"), Category = "Components")
+	TObjectPtr<UZAQInventory> PlayerInventory;
+
+	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = "true"), Category = "Components")
 	TObjectPtr<UZAQInteractionHandler> InteractionHandlerComponent;
 
 	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = "true"), Category = "Components")
@@ -49,9 +53,9 @@ private:
 	void MoveSide(float Value);
 	void Turn(float Value);
 	void LookUp(float Value);
-	void Interact();
 	virtual void Jump() override;
 
+	virtual void Interact();
 
 protected:
 	virtual void BeginPlay() override;

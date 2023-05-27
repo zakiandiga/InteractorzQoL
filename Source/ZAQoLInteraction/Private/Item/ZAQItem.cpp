@@ -1,6 +1,15 @@
 /* Copyright (c) [2023] zakiandiga (github.com/zakiandiga) - All rights reserved. */
 
 #include "Item/ZAQItem.h"
+#include "Kismet/GameplayStatics.h"
+
+UZAQItem::UZAQItem()
+{
+	if (ItemDataClass != nullptr)
+	{
+		//AssignPropertiesFromItemData();
+	}
+}
 
 #if WITH_EDITOR
 void UZAQItem::PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent)
@@ -32,9 +41,10 @@ void UZAQItem::AssignPropertiesFromItemData()
 	ItemIcon = Item->ItemData.Icon;
 	ItemDescription = Item->ItemData.Description;
 	ItemType = Item->ItemData.ItemType;
-	ItemPickupSprite = Item->ItemData.PickUpSprite;	
-	Stackable = Item->ItemData.bIsStackable;
+	ItemSprite = Item->ItemData.ItemSprite;	
+	bStackable = Item->ItemData.bIsStackable;
 	StackLimit = Item->ItemData.StackLimit;
+	
 }
 
 void UZAQItem::ClearProperties()
@@ -42,9 +52,9 @@ void UZAQItem::ClearProperties()
 	ItemName = FName();
 	ItemIcon = nullptr;
 	ItemDescription = FString();	
-	ItemPickupSprite = nullptr;
-	Stackable = true;
-	StackLimit = 1;
+	ItemSprite = nullptr;
+	bStackable = true;
+	StackLimit = 99;
 }
 
 void UZAQItem::UseItem_Implementation(AActor* ItemUser)
@@ -62,6 +72,8 @@ void UZAQItem::UseItem_Implementation(AActor* ItemUser)
 
 void UZAQItem::SpawnItem_Implementation(AActor* ItemSpawner)
 {
+	//AActor* ActorToSpawn = GetWorld()->SpawnActor<AActor>(GetWorldRepresentation(), FVector(0,0,0), FRotator::ZeroRotator);
+
 	FString NameToPrint = ItemName.ToString();
 	FString User = ItemSpawner->GetName();
 
@@ -71,4 +83,18 @@ void UZAQItem::SpawnItem_Implementation(AActor* ItemSpawner)
 	int32 Key = -1;
 
 	GEngine->AddOnScreenDebugMessage(Key, DisplayTime, TextColor, DebugMessage);
+}
+
+void UZAQItem::SetStackedQuantity(int32 Value)
+{
+	if (!IsStackable())
+	{
+		StackedQuantity = 1;
+#if WITH_EDITOR
+		UE_LOG(LogTemp, Warning, TEXT("Item is not stackable, assign value = 1"));
+#endif
+		return;
+	}
+
+	StackedQuantity = Value;
 }
