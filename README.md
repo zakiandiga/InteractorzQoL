@@ -10,7 +10,7 @@ Currently ready feature:
 + Item functionality
 + Item authoring system
 + Inventory
-+ +Item Creator BETA
++ Item Creator BETA
 
 Upcoming:
 + Interactable NPC
